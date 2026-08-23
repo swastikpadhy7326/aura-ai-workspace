@@ -1,0 +1,6 @@
+{
+  "name": "AURA - Real-World Multimodal AI Personal Assistant",
+  "description": "Production-grade autonomous AI assistant & agentic workspace with multimodal reasoning, tool orchestration, long-term memory, system diagnostics, document intelligence (RAG), voice I/O, safe computer actions, task scheduling, and explainable execution telemetry.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
