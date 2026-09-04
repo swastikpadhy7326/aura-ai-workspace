@@ -36,6 +36,8 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ConfirmationPayload, Message, SystemStatus } from '../types';
 import { speechHandler } from '../utils/speech';
+import { useAuth } from '../context/AuthContext';
+
 
 // Dedicated Interactive Web Activity & Voice Redirection Bento Card
 interface WebActivityCardProps {
@@ -206,6 +208,7 @@ export const ChatView: React.FC<ChatViewProps> = ({
   systemStatus,
   onNavigateTab,
 }) => {
+  const { currentUser, userProfile, openAuthModal } = useAuth();
   const [inputText, setInputText] = useState('');
   const [attachedImage, setAttachedImage] = useState<string | null>(null);
   const [expandedToolIds, setExpandedToolIds] = useState<Record<string, boolean>>({});
@@ -383,15 +386,23 @@ export const ChatView: React.FC<ChatViewProps> = ({
 
         {/* User Card Pill */}
         <div className="p-3 border-t border-slate-800">
-          <div className="flex items-center gap-3 p-2 rounded-lg bg-slate-900/50 border border-slate-800">
-            <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-white shadow-inner">
-              AU
+          <button
+            onClick={() => openAuthModal(currentUser ? 'profile' : 'login')}
+            className="w-full flex items-center gap-3 p-2 rounded-lg bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800 hover:border-indigo-500/40 transition-all text-left group"
+            title={currentUser ? "Account Settings & Security" : "Click to Sign In"}
+          >
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-xs font-bold text-white shadow-inner shrink-0">
+              {(userProfile?.displayName || currentUser?.displayName || currentUser?.email || 'AU')[0].toUpperCase()}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold text-white truncate">Developer Workspace</p>
-              <p className="text-[10px] text-slate-500 font-mono">AURA Autonomous v3.2</p>
+              <p className="text-xs font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">
+                {currentUser ? (userProfile?.displayName || currentUser.displayName || 'Authenticated User') : 'Sign In to AURA'}
+              </p>
+              <p className="text-[10px] text-slate-500 font-mono truncate">
+                {currentUser ? (userProfile?.role ? `${userProfile.role} • settings` : 'active session') : 'Sync workspace & memory'}
+              </p>
             </div>
-          </div>
+          </button>
         </div>
       </aside>
 

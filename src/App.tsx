@@ -9,11 +9,12 @@ import { SecurityAuditView } from './components/SecurityAuditView';
 import { ProjectDefensePanel } from './components/ProjectDefensePanel';
 import { FuturisticAISuite } from './components/FuturisticAISuite';
 import { CodeSandboxModal } from './components/CodeSandboxModal';
+import { AuthModal } from './components/AuthModal';
+import { AuthProvider } from './context/AuthContext';
 import { ConfirmationPayload, Message, SystemStatus } from './types';
 import { speechHandler } from './utils/speech';
 
-
-export default function App() {
+function MainApp() {
   const [activeTab, setActiveTab] = useState<string>('chat');
   const [systemStatus, setSystemStatus] = useState<SystemStatus | null>(null);
   const [assistantStatus, setAssistantStatus] = useState<'idle' | 'listening' | 'thinking' | 'speaking' | 'executing_tool' | 'error'>('idle');
@@ -388,6 +389,18 @@ I am your intelligent assistant equipped with:
         initialCode={sandboxModal.code}
         initialLanguage={sandboxModal.language}
       />
+
+      {/* Authentication & Account Security Modal */}
+      <AuthModal />
     </div>
   );
 }
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <MainApp />
+    </AuthProvider>
+  );
+}
+

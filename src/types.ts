@@ -273,4 +273,28 @@ export interface SpeculativeBranch {
   };
 }
 
+export type UserRole = 'user' | 'engineer' | 'admin' | 'guest';
+
+export interface UserProfile {
+  uid: string;
+  email: string;
+  displayName: string;
+  role: UserRole;
+  createdAt: string;
+  lastLoginAt: string;
+  photoURL?: string;
+  mfaEnabled?: boolean;
+}
+
+export interface UserSecurityLog {
+  id: string;
+  userId: string;
+  eventType: 'sign_in' | 'sign_up' | 'sign_out' | 'password_reset_request' | 'profile_update' | 'failed_attempt';
+  timestamp: string;
+  ipAddress?: string;
+  userAgent?: string;
+  details?: string;
+}
+
+
 

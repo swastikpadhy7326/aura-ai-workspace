@@ -14,10 +14,15 @@ import {
   VolumeX,
   Cpu,
   Cloud,
-  HardDrive
+  HardDrive,
+  User,
+  LogIn,
+  LifeBuoy,
 } from 'lucide-react';
 import { SystemStatus } from '../types';
 import { KnowledgeStatusIndicator } from './KnowledgeStatusIndicator';
+import { useAuth } from '../context/AuthContext';
+
 
 
 interface NavbarProps {
@@ -47,6 +52,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleOffline,
   unreadTasksCount,
 }) => {
+  const { currentUser, userProfile, openAuthModal } = useAuth();
+
   const tabs = [
     { id: 'chat', label: 'Agent Workspace', icon: Bot },
     { id: 'futuristic', label: '2030 AI Labs', icon: Sparkles, highlight: true },
@@ -201,6 +208,40 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             {isListening ? <Mic className="w-3.5 h-3.5 text-white" /> : <MicOff className="w-3.5 h-3.5 text-slate-400" />}
           </button>
+
+          <div className="w-px h-5 bg-slate-800 mx-0.5" />
+
+          {/* User Account / Sign In Trigger */}
+          {currentUser ? (
+            <button
+              id="user-profile-btn"
+              onClick={() => openAuthModal('profile')}
+              className="flex items-center gap-2 pl-1.5 pr-3 py-1 bg-slate-900/90 hover:bg-slate-800/90 border border-slate-700/60 rounded-full transition-all text-xs text-slate-200 group shadow-sm hover:border-indigo-500/50"
+              title="View Account & Security Settings"
+            >
+              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white font-bold text-[11px] ring-1 ring-white/20">
+                {(userProfile?.displayName || currentUser.displayName || currentUser.email || 'U')[0].toUpperCase()}
+              </div>
+              <div className="flex flex-col items-start leading-none hidden sm:flex">
+                <span className="text-[11px] font-semibold text-slate-200 max-w-[85px] truncate">
+                  {userProfile?.displayName || currentUser.displayName || 'User'}
+                </span>
+                <span className="text-[9px] text-indigo-400 font-mono">
+                  {userProfile?.role || 'active'}
+                </span>
+              </div>
+            </button>
+          ) : (
+            <button
+              id="signin-btn"
+              onClick={() => openAuthModal('login')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-lg shadow-md shadow-indigo-600/30 transition-all active:scale-95"
+              title="Sign in or register account"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

@@ -1,0 +1,45 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated user profile information and access settings",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Unique identifier of the user" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "displayName": { "type": "string", "description": "User full name or handle" },
+        "role": { "type": "string", "enum": ["user", "engineer", "admin", "guest"], "description": "Access control role" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account registration timestamp" },
+        "lastLoginAt": { "type": "string", "format": "date-time", "description": "Last successful login timestamp" },
+        "photoURL": { "type": "string", "description": "Avatar image URL" },
+        "mfaEnabled": { "type": "boolean", "description": "Whether two-factor authentication is configured" }
+      },
+      "required": ["uid", "email", "displayName", "role", "createdAt", "lastLoginAt"]
+    },
+    "SecurityAuditEntry": {
+      "title": "SecurityAuditEntry",
+      "description": "Audit trail log of user login, logout, password resets, and session security events",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique log entry identifier" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "eventType": { "type": "string", "enum": ["sign_in", "sign_up", "sign_out", "password_reset_request", "profile_update", "failed_attempt"], "description": "Type of authentication event" },
+        "timestamp": { "type": "string", "format": "date-time", "description": "Timestamp of the security event" },
+        "ipAddress": { "type": "string", "description": "Client IP / origin indicator" },
+        "userAgent": { "type": "string", "description": "Browser / device user agent" },
+        "details": { "type": "string", "description": "Human-readable event description" }
+      },
+      "required": ["id", "userId", "eventType", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document indexed by Firebase Auth UID"
+    },
+    "/users/{userId}/securityLogs/{logId}": {
+      "schema": "SecurityAuditEntry",
+      "description": "User personal security and session audit records"
+    }
+  }
+}
